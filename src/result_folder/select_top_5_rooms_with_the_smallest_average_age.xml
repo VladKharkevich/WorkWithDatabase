@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<result>
+   <record>
+      <room_id>661</room_id>
+      <name>Room #661</name>
+      <average_age>20127348333333.3333</average_age>
+   </record>
+   <record>
+      <room_id>913</room_id>
+      <name>Room #913</name>
+      <average_age>20047410333333.3333</average_age>
+   </record>
+   <record>
+      <room_id>111</room_id>
+      <name>Room #111</name>
+      <average_age>19929506200000.0000</average_age>
+   </record>
+   <record>
+      <room_id>957</room_id>
+      <name>Room #957</name>
+      <average_age>19913058444444.4444</average_age>
+   </record>
+   <record>
+      <room_id>773</room_id>
+      <name>Room #773</name>
+      <average_age>19894251363636.3636</average_age>
+   </record>
+</result>
