@@ -35,6 +35,7 @@ class App:
             serialized_data = self._serialize_result_of_sql_queries(
                 sql_response)
             self._write_to_file_serialized_data(name, serialized_data)
+        current_connector.add_indexes_to_tables()
         current_connector.disconnect()
 
     def _load_students_and_rooms_data_from_file(self) -> Tuple[List[Dict]]:

@@ -98,6 +98,27 @@ class MySQLConnector(IConnector):
         self.cursor.execute(query)
         return self.cursor.fetchall()
 
+    def add_indexes_to_tables(self) -> None:
+        self._add_index_to_table('student', 'sex')
+        self._add_index_to_table('student', 'room_id')
+
+    def _add_index_to_table(self, table: str, column: str) -> None:
+        # Check existing index
+        # P.S transactions: are not necessary, because i don't think that race condition will be here 
+        query = f"""
+                SELECT COUNT(1) indexExists FROM INFORMATION_SCHEMA.STATISTICS
+                WHERE table_schema=DATABASE() AND table_name='{table}' AND index_name='idx_{column}';
+                """
+        self.cursor.execute(query)
+        index_is_exist = self.cursor.fetchone()
+        if (index_is_exist['indexExists'] == 0):
+            # Adding index
+            query = f"""
+                    CREATE INDEX idx_{column} 
+                    ON {table}({column})
+                    """
+            self.cursor.execute(query)
+
     def disconnect(self):
         if self.db.is_connected():
             self.cursor.close()

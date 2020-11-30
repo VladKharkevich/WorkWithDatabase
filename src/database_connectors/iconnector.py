@@ -28,5 +28,9 @@ class IConnector(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def add_indexes_to_tables(self) -> None:
+        pass
+
+    @abstractmethod
     def disconnect(self) -> None:
         pass
