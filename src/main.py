@@ -18,6 +18,8 @@ class App:
         self.output_format = argv.format
 
     def run(self):
+        self._load_env_variables()
+
         students_data, rooms_data = self._load_students_and_rooms_data_from_file()
 
         current_connector: IConnector = settings.available_database_connectors.get(
@@ -37,6 +39,10 @@ class App:
             self._write_to_file_serialized_data(name, serialized_data)
         current_connector.add_indexes_to_tables()
         current_connector.disconnect()
+
+    def _load_env_variables(self):
+        # load env variables .env file
+        load_dotenv(override=True)
 
     def _load_students_and_rooms_data_from_file(self) -> Tuple[List[Dict]]:
         current_loader: IFileLoader = settings.available_loaders_from_file.get(
@@ -70,9 +76,6 @@ class App:
 
 
 if __name__ == "__main__":
-    # load env variables .env file
-    load_dotenv(override=True)
-
     # init argument parser
     parser = argparse.ArgumentParser()
     parser.add_argument(
