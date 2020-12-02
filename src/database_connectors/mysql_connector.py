@@ -104,7 +104,6 @@ class MySQLConnector(IConnector):
 
     def _add_index_to_table(self, table: str, column: str) -> None:
         # Check existing index
-        # P.S transactions: are not necessary, because i don't think that race condition will be here 
         query = f"""
                 SELECT COUNT(1) indexExists FROM INFORMATION_SCHEMA.STATISTICS
                 WHERE table_schema=DATABASE() AND table_name='{table}' AND index_name='idx_{column}';
