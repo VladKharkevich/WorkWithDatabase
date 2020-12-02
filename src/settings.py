@@ -40,8 +40,5 @@ settings.available_writers_to_file['text'] = TextFileWriter
 settings.available_database_connectors['mysql'] = MySQLConnector
 settings.current_database_connector = 'mysql'
 
-settings.name_of_queries_to_database = ['select_list_room_with_count_of_students',
-                                        'select_top_5_rooms_with_the_smallest_average_age',
-                                        'select_top_5_rooms_with_the_biggest_age_difference',
-                                        'select_list_room_with_different_sex_of_students'
+settings.name_of_queries_to_database = ['select',
                                         ]

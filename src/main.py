@@ -1,7 +1,6 @@
 import argparse
 import os
-from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, Generator, List, Tuple
 
 from argparse_types import ArgparseType
 from database_connectors.iconnector import IConnector
@@ -33,18 +32,23 @@ class App:
         current_connector.connect()
         current_connector.insert_students_and_rooms_data(
             students_data, rooms_data)
-        for name in settings.name_of_queries_to_database:
-
-            sql_response = getattr(current_connector, name)()
+        for method_name in self._get_method_names_with_queries(current_connector):
+            sql_response = getattr(current_connector, method_name)()
             serialized_data = self._serialize_result_of_sql_queries(
                 sql_response)
-            self._write_to_file_serialized_data(name, serialized_data)
+            self._write_to_file_serialized_data(method_name, serialized_data)
         current_connector.add_indexes_to_tables()
         current_connector.disconnect()
 
     def _load_env_variables(self):
         # load env variables .env file
         load_dotenv(override=True)
+
+    def _get_method_names_with_queries(self, connector) -> Generator[str, None, None]:
+        for name_of_query in settings.name_of_queries_to_database:
+            for method_name in dir(connector):
+                if method_name.startswith(name_of_query):
+                    yield method_name
 
     def _reformat_students_birthday(self, students_data: List[Dict]):
         for student in students_data:
