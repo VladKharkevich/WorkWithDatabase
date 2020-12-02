@@ -1,5 +1,6 @@
 import argparse
 import os
+from datetime import datetime
 from typing import Dict, List, Tuple
 
 from argparse_types import ArgparseType
@@ -21,7 +22,7 @@ class App:
         self._load_env_variables()
 
         students_data, rooms_data = self._load_students_and_rooms_data_from_file()
-
+        students_data = self._reformat_students_birthday(students_data)
         current_connector: IConnector = settings.available_database_connectors.get(
             settings.current_database_connector)(user=os.getenv("MYSQL_USER"),
                                                  password=os.getenv(
@@ -33,6 +34,7 @@ class App:
         current_connector.insert_students_and_rooms_data(
             students_data, rooms_data)
         for name in settings.name_of_queries_to_database:
+
             sql_response = getattr(current_connector, name)()
             serialized_data = self._serialize_result_of_sql_queries(
                 sql_response)
@@ -43,6 +45,12 @@ class App:
     def _load_env_variables(self):
         # load env variables .env file
         load_dotenv(override=True)
+
+    def _reformat_students_birthday(self, students_data: List[Dict]):
+        for student in students_data:
+            student['birthday'] = student['birthday'].replace(
+                "T", " ").partition(".")[0]
+        return students_data
 
     def _load_students_and_rooms_data_from_file(self) -> Tuple[List[Dict]]:
         current_loader: IFileLoader = settings.available_loaders_from_file.get(

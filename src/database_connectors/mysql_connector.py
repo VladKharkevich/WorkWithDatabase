@@ -59,11 +59,11 @@ class MySQLConnector(IConnector):
 
     def select_top_5_rooms_with_the_smallest_average_age(self) -> List[Dict]:
         query = """
-                SELECT r.room_id, r.name, avg(st.birthday) AS average_age 
+                SELECT r.room_id, r.name, AVG(TIMESTAMPDIFF(DAY, DATE(st.birthday), CURDATE())) / 365.25 AS average_age 
                 FROM room r
                 JOIN student st ON r.room_id = st.room_id
                 GROUP BY r.room_id, r.name
-                ORDER BY average_age DESC
+                ORDER BY average_age
                 LIMIT 5
                 """
         self.cursor.execute(query)
@@ -71,7 +71,7 @@ class MySQLConnector(IConnector):
 
     def select_top_5_rooms_with_the_biggest_age_difference(self) -> List[Dict]:
         query = """
-                SELECT r.room_id, r.name, max(st.birthday) - min(st.birthday) AS age_difference
+                SELECT r.room_id, r.name, TIMESTAMPDIFF(DAY, min(st.birthday), max(st.birthday)) / 365.25 AS age_difference
                 FROM room r
                 JOIN student st ON r.room_id = st.room_id
                 GROUP BY r.room_id, r.name
