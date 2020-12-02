@@ -51,8 +51,8 @@ class MySQLConnector(IConnector):
                 SELECT r.room_id, r.name, count(*) AS count
                 FROM room r
                 JOIN student st ON r.room_id = st.room_id
-                GROUP BY 1, 2
-                ORDER BY 3
+                GROUP BY r.room_id, r.name
+                ORDER BY count DESC
                 """
         self.cursor.execute(query)
         return self.cursor.fetchall()
@@ -62,8 +62,8 @@ class MySQLConnector(IConnector):
                 SELECT r.room_id, r.name, avg(st.birthday) AS average_age 
                 FROM room r
                 JOIN student st ON r.room_id = st.room_id
-                GROUP BY 1, 2
-                ORDER BY 3 DESC
+                GROUP BY r.room_id, r.name
+                ORDER BY average_age DESC
                 LIMIT 5
                 """
         self.cursor.execute(query)
@@ -74,8 +74,8 @@ class MySQLConnector(IConnector):
                 SELECT r.room_id, r.name, max(st.birthday) - min(st.birthday) AS age_difference
                 FROM room r
                 JOIN student st ON r.room_id = st.room_id
-                GROUP BY 1, 2
-                ORDER BY 3 DESC
+                GROUP BY r.room_id, r.name
+                ORDER BY age_difference DESC
                 LIMIT 5
                 """
         self.cursor.execute(query)
